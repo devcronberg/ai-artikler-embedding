@@ -2,3 +2,4 @@ chunks/
 *.txt
 *.pdf
 !requriments.txt
+.env
