@@ -1,24 +1,32 @@
+# Trin 3: Lav en "embedding" for hvert tekststykke fra trin 2.
+# En embedding er en liste af tal, der repræsenterer tekstens indhold.
+# Tekster med lignende betydning får ofte lignende talmønstre. Det gør
+# senere søgning mulig uden at kræve præcis de samme ord i tekst og spørgsmål.
 from pathlib import Path
 import json
 from sentence_transformers import SentenceTransformer
 
-# Load model
+# Indlæs en færdigtrænet model; vi træner ikke vores egen model her.
+# Første gang hentes modellen fra internettet. Derefter bruges den lokalt.
+# Søgeprogrammerne skal bruge samme model, så tallene kan sammenlignes.
 model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
 
-# Find all text files
+# Find tekststykkerne i mappen fra trin 2. Kør fra projektets mappe.
 chunk_dir = Path("chunks")
 chunk_files = list(chunk_dir.glob("*.txt"))
 
 print(f"Found {len(chunk_files)} chunks...")
 
 for i, chunk_file in enumerate(chunk_files, start=1):
-    # Read text
+    # Læs ét tekststykke ad gangen.
     text = chunk_file.read_text(encoding="utf-8")
     
-    # Create embedding
-    embedding = model.encode(text).tolist()  # convert to normal Python list
+    # Modellen omdanner teksten til tal, ikke til et resumé eller et svar.
+    # En almindelig Python-liste kan gemmes i JSON-formatet nedenfor.
+    embedding = model.encode(text).tolist()
 
-    # Save to json file
+    # Gem tal og kildefilens navn ved siden af teksten, fx chunk_001.json.
+    # JSON er et struktureret tekstformat. En eksisterende fil overskrives.
     json_file = chunk_file.with_suffix(".json")
     with json_file.open("w", encoding="utf-8") as f:
         json.dump({
@@ -26,7 +34,7 @@ for i, chunk_file in enumerate(chunk_files, start=1):
             "embedding": embedding
         }, f)
     
-    # Progress indicator
+    # Vis fremdrift for hver 50 tekststykker og ved det sidste stykke.
     if i % 50 == 0 or i == len(chunk_files):
         print(f"✅ {i}/{len(chunk_files)} done ({chunk_file.name})")
 

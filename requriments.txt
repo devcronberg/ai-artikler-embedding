@@ -1,0 +1,18 @@
+# Installer pakkerne med: python -m pip install -r requriments.txt
+# Linjer med # er forklaringer og ignoreres under installationen.
+
+# Henter tekst og ord fra PDF-filer (trin 1).
+pdfplumber
+# Proever at dele sammenklistrede engelske ord fra PDF-teksten (trin 1).
+wordninja
+# Deler lang tekst i mindre tekststykker (trin 2).
+# Under version 1.0 for at bevare importen fra langchain.text_splitter.
+langchain<1.0
+# Laver tekst om til tal, saa teksters betydning kan sammenlignes (trin 3-6).
+sentence-transformers
+# Haandterer modellens talberegninger og tabeller af tal, kaldet tensorer.
+torch
+# Sender forespoergsler over internettet til sprogmodellen (llm_utils.py).
+requests
+# Laeser fx API-noeglen fra en lokal .env-fil (llm_utils.py).
+python-dotenv
